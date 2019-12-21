@@ -1,2 +1,0 @@
-# MSCourse
-MSCourse, Personal training
