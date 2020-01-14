@@ -1,5 +1,6 @@
-package com.programmingTraining.rest.webservices.restfulwebservices.classes;
+package com.programmingTraining.rest.webservices.restfulwebservices.daoservice;
 
+import com.programmingTraining.rest.webservices.restfulwebservices.classes.User;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
