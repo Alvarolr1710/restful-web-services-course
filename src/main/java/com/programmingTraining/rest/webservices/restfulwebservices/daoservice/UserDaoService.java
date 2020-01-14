@@ -1,41 +1,14 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.daoservice;
 
 import com.programmingTraining.rest.webservices.restfulwebservices.classes.User;
-import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
 
-@Component
-public class UserDaoService {
+public interface UserDaoService {
 
-    private static List<User> users = new ArrayList<>();
-    private static int userCount = 3;
+    public List<User> findAllUser();
 
-    static {
-        users.add(new User(1, "Alvaro", new Date()));
-        users.add(new User(2, "Maria Laura", new Date()));
-        users.add(new User(3, "Titi", new Date()));
-    }
+    public User saveUser(User user);
 
-    public List<User> findAllUser() {
-        return users;
-
-    }
-
-    public User saveUser(User user) {
-        if (user.getId() == 0) {
-            user.setId(++userCount);
-        }
-        users.add(user);
-        return user;
-    }
-
-    public User findUserById(int id) {
-        for (User user : users) {
-            if (user.getId() == (id)) {
-                return user;
-            }
-        }
-        return null;
-    }
+    public User findUserById(int id);
 }

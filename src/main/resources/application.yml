@@ -1,0 +1,8 @@
+loggin:
+  level:
+    org:
+      springframework: info
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
