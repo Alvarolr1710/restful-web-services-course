@@ -1,8 +1,8 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.controller;
 
 import com.programmingTraining.rest.webservices.restfulwebservices.RestfulWebServicesApplication;
-import com.programmingTraining.rest.webservices.restfulwebservices.exceptionhandler.UserNotFoundException;
 import org.hamcrest.core.Is;
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Objects;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,7 +46,7 @@ public class UserResourcesControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertNotNull(response.getResponse().getContentAsString());
+        assertThat(response.getResponse().getContentAsString(), Is.is(IsNull.notNullValue()));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class UserResourcesControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertTrue(response.getResponse().getContentAsString().contains("Alvaro"));
+        assertThat(response.getResponse().getContentAsString().contains("Alvaro"), Is.is(true));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class UserResourcesControllerTest {
     }
 
     @Test
-    public void shouldThrowNotFoundUserException() throws Exception {
+    public void shouldThrowUserNotFoundException() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/users/" + invalidUserId))
                 .andExpect(status().isNotFound())
                 .andReturn();
