@@ -11,8 +11,8 @@ public class User {
 
     private int id;
 
-    @Size(min = 2)
-    @Pattern(regexp = "[a-zA-Z]+")
+    @Size(min = 2, message = "Name should have at least 2 characters")
+    @Pattern(regexp = "[a-zA-Z]+", message = "Name should only contains letters")
     private String name;
 
     @Past
