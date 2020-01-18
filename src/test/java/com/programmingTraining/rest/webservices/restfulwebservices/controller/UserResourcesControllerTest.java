@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Objects;
-
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,7 +29,6 @@ public class UserResourcesControllerTest {
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
     private MvcResult response;
-    private String invalidUserId = "123456";
 
     @Before
     public void setupMockMvc() {
@@ -64,16 +61,5 @@ public class UserResourcesControllerTest {
                 .contentType(APPLICATION_JSON)
                 .content("{\"name\":\"Alvaro\",\"birthDate\":\"2020-01-14T22:24:12.756+0000\"}"))
                 .andExpect(status().isCreated());
-
-    }
-
-    @Test
-    public void shouldThrowUserNotFoundException() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/users/" + invalidUserId))
-                .andExpect(status().isNotFound())
-                .andReturn();
-
-        assertThat(Objects.requireNonNull(mvcResult.getResolvedException()).getLocalizedMessage(),
-                Is.is("User with id: \"" + invalidUserId + "\" was not found."));
     }
 }

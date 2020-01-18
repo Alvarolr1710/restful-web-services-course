@@ -1,8 +1,16 @@
+logging:
+  level:
+    root: INFO
 loggin:
   level:
     org:
-      springframework: info
+      springframework: INFO
 spring:
+  serialization:
   jackson:
-    serialization:
-      write-dates-as-timestamps: false
+    write-dates-as-timestamps: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

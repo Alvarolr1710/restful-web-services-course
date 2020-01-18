@@ -61,11 +61,10 @@ public class UserResourcesController {
 
     @GetMapping(path = "/users/{userId}/posts/{postId}")
     public Resource<String> retrieveUserPostsById(@PathVariable int userId, @PathVariable int postId) {
-        String post = getUserById(userId).getPostList().get(postId);
-        if (post == null) {
-            throw new PostNotFoundException("Post with id: " + postId + " was not found.");
+        if (getUserById(userId).getPostList().size() < userId) {
+            throw new PostNotFoundException("Post with id: '" + postId + "' was not found.");
         }
-        Resource<String> resource = new Resource<>(post);
+        Resource<String> resource = new Resource<>(getUserById(userId).getPostList().get(postId));
         ControllerLinkBuilder controllerLinkBuilder = linkTo(methodOn(this.getClass()).retrieveUserPosts(userId));
         resource.add(controllerLinkBuilder.withRel("all-posts"));
         return resource;
