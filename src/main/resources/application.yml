@@ -9,6 +9,16 @@ spring:
   serialization:
   jackson:
     write-dates-as-timestamps: false
+  #  security:
+  #    user:
+  #      name: user
+  #      password: password
+  #      roles: ADMIN
+  jpa:
+    show-sql: true
+  h2:
+    console:
+      enabled: true
 management:
   endpoints:
     web:

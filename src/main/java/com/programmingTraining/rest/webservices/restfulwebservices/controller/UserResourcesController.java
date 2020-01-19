@@ -1,5 +1,8 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.controller;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.programmingTraining.rest.webservices.restfulwebservices.classes.User;
 import com.programmingTraining.rest.webservices.restfulwebservices.daoservice.UserRepositoryImpl;
 import com.programmingTraining.rest.webservices.restfulwebservices.exceptionhandling.exceptions.ErrorRetrievingUsersExceptions;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -99,6 +103,14 @@ public class UserResourcesController {
         if (userById == null)
             throw new UserNotFoundException("User with id: '" + userId + "' was not found.");
         return userById;
+    }
+
+    private MappingJacksonValue controllerFilter(Object Users, String filteredField) {
+        SimpleBeanPropertyFilter beanPropertyFilter = SimpleBeanPropertyFilter.serializeAllExcept(filteredField);
+        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("UsersFilter", beanPropertyFilter);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(Users);
+        mappingJacksonValue.setFilters(filterProvider);
+        return mappingJacksonValue;
     }
 
 }

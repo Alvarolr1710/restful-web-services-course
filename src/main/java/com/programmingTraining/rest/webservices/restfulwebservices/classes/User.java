@@ -3,7 +3,9 @@ package com.programmingTraining.rest.webservices.restfulwebservices.classes;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.json.simple.JSONArray;
 
+import javax.persistence.*;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -12,8 +14,11 @@ import java.util.Date;
 import java.util.List;
 
 @ApiModel(description = "All details about the user")
+@Entity
 public class User {
 
+    @Id
+    @GeneratedValue
     private int id;
 
     @Size(min = 2, message = "Name should have at least 2 characters")
@@ -24,6 +29,9 @@ public class User {
     @Past
     @ApiModelProperty(notes = "Birthday should be in the past")
     private Date birthDate;
+
+    @Column
+    @ElementCollection(targetClass = JSONArray.class)
     private List<String> postList;
 
     public List<String> getPostList() {
@@ -75,3 +83,5 @@ public class User {
                 '}';
     }
 }
+
+
