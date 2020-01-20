@@ -1,65 +1,69 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.controller;
 
 import com.programmingTraining.rest.webservices.restfulwebservices.RestfulWebServicesApplication;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
+import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertThat;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = RestfulWebServicesApplication.class)
-@WebAppConfiguration
+@SpringBootTest(classes = RestfulWebServicesApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserResourcesControllerTest {
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-    private MockMvc mockMvc;
-    private MvcResult response;
+    @LocalServerPort
+    private int port;
+
+    private Response response;
 
     @Before
     public void setupMockMvc() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .build();
+        RestAssured.port = port;
+        RestAssured.baseURI = "http://localhost";
+
     }
 
     @Test
-    public void shouldRetrieveAllUsers() throws Exception {
-        response = mockMvc.perform(MockMvcRequestBuilders.get("/users"))
-                .andExpect(status().isOk())
-                .andReturn();
+    public void shouldRetrieveAllUsers() {
+        response = given().log().all()
+                .when().get("/users").thenReturn();
 
-        assertThat(response.getResponse().getContentAsString(), Is.is(IsNull.notNullValue()));
+        assertThat(response.getBody().asString(), Is.is(IsNull.notNullValue()));
+        assertThat(response.getStatusCode(), Is.is(200));
     }
 
     @Test
-    public void shouldRetrieveUserById() throws Exception {
-        response = mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        assertThat(response.getResponse().getContentAsString().contains("Alvaro"), Is.is(true));
+    public void shouldRetrieveUserById() {
+        given().log().all()
+                .when().get("/users/10000")
+                .then().log().all().statusCode(200);
     }
 
     @Test
-    public void shouldCreateNewUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/")
-                .contentType(APPLICATION_JSON)
-                .content("{\"name\":\"Alvaro\",\"birthDate\":\"2020-01-14T22:24:12.756+0000\"}"))
-                .andExpect(status().isCreated());
+    public void shouldCreateNewUser() {
+        response = given().body("{\"name\":\"Alvaro\",\"birthDate\":\"2020-01-14T22:24:12.756+0000\"}")
+                .contentType("application/json")
+                .log().all()
+                .when().post("/users/").thenReturn();
+
+        assertThat(response.statusCode(), Is.is(201));
+    }
+
+    @Test
+    public void ShouldRetrieveUserPosts() {
+        response = given().log().all()
+                .when().get("/users/10000/posts").thenReturn();
+
+        assertThat(response.getBody().asString().contains("Hola"), Is.is(true));
+        assertThat(response.statusCode(), Is.is(200));
+
     }
 }

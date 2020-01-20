@@ -3,7 +3,6 @@ package com.programmingTraining.rest.webservices.restfulwebservices.classes;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.json.simple.JSONArray;
 
 import javax.persistence.*;
 import javax.validation.constraints.Past;
@@ -18,7 +17,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Size(min = 2, message = "Name should have at least 2 characters")
@@ -30,15 +29,24 @@ public class User {
     @ApiModelProperty(notes = "Birthday should be in the past")
     private Date birthDate;
 
-    @Column
-    @ElementCollection(targetClass = JSONArray.class)
-    private List<String> postList;
+    @OneToMany(mappedBy = "user")
+    private List<Post> postList;
 
-    public List<String> getPostList() {
+    public User() {
+    }
+
+    public User(int id, String name, Date birthDate) {
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.postList = new ArrayList<>();
+    }
+
+    public List<Post> getPostList() {
         return postList;
     }
 
-    public void setPostList(List<String> postList) {
+    public void setPostList(List<Post> postList) {
         this.postList = postList;
     }
 
@@ -66,20 +74,13 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public User(int id, String name, Date birthDate) {
-        this.id = id;
-        this.name = name;
-        this.birthDate = birthDate;
-        this.postList = new ArrayList<>();
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", birthDate=" + birthDate +
-                ", postList=" + postList +
+                ", postList=" + postList.toString() +
                 '}';
     }
 }

@@ -1,10 +1,10 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.daoservice;
 
-import com.programmingTraining.rest.webservices.restfulwebservices.classes.User;
+import com.programmingTraining.rest.webservices.restfulwebservices.classes.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface PostRepository extends JpaRepository<Post, Integer> {
 
 }
