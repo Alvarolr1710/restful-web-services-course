@@ -1,16 +1,8 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.exceptionhandling;
 
 import com.programmingTraining.rest.webservices.restfulwebservices.IntegrationTestBase;
-import com.programmingTraining.rest.webservices.restfulwebservices.RestfulWebServicesApplication;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.hamcrest.core.Is;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertThat;

@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -57,11 +56,11 @@ public class UserResourcesController {
 
     @GetMapping(path = "/users/{userId}/posts/{postId}")
     public Post retrieveUserPostsById(@PathVariable int userId, @PathVariable int postId) throws PostNotFoundException {
-        List<Post> postList = getUserById(userId).getPostList();
-        if (postList.size() < userId) {
+        Optional<Post> post = postRepository.findById(postId);
+        if (!post.isPresent())
             throw new PostNotFoundException("Post with id: '" + postId + "' was not found.");
-        }
-        return postList.get(postId-1);
+
+        return post.get();
     }
 
     @PostMapping(path = "/users")

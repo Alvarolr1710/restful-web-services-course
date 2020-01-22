@@ -53,6 +53,7 @@ public class UserResourcesControllerTest {
                 .contentType("application/json")
                 .log().all()
                 .when().post("/users/").thenReturn();
+        response.then().log().all();
 
         assertThat(response.statusCode(), Is.is(201));
     }
@@ -60,10 +61,32 @@ public class UserResourcesControllerTest {
     @Test
     public void ShouldRetrieveUserPosts() {
         response = given().log().all()
-                .when().get("/users/10000/posts").thenReturn();
+                .when().get("/users/10000/posts");
+        response.then().log().all();
 
-        assertThat(response.getBody().asString().contains("Hola"), Is.is(true));
+        assertThat(response.getBody().asString().contains("10000"), Is.is(true));
+        assertThat(response.getBody().asString().contains("20000"), Is.is(true));
         assertThat(response.statusCode(), Is.is(200));
+    }
 
+    @Test
+    public void ShouldRetrieveUserSpecificPosts() {
+        response = given().log().all()
+                .when().get("/users/10000/posts/10000").thenReturn();
+        response.then().log().all();
+
+        assertThat(response.getBody().asString().contains("Hola mundo"), Is.is(true));
+        assertThat(response.statusCode(), Is.is(200));
+    }
+
+    @Test
+    public void shouldCreateNewPostForTheUser() {
+        response = given().body("{\"description\":\"this is a test\"}")
+                .contentType("application/json")
+                .log().all()
+                .when().get("/users/10000/posts/").thenReturn();
+        response.then().log().all();
+
+        assertThat(response.statusCode(), Is.is(201));
     }
 }
