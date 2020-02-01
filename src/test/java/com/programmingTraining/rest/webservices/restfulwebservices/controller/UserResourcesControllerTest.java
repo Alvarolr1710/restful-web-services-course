@@ -1,38 +1,29 @@
 package com.programmingTraining.rest.webservices.restfulwebservices.controller;
 
-import com.programmingTraining.rest.webservices.restfulwebservices.RestfulWebServicesApplication;
-import io.restassured.RestAssured;
+import com.programmingTraining.rest.webservices.restfulwebservices.IntegrationTestBase;
 import io.restassured.response.Response;
-import org.apache.http.HttpStatus;
-import org.hamcrest.core.Is;
 import org.hamcrest.core.IsNull;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static io.restassured.RestAssured.given;
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = RestfulWebServicesApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserResourcesControllerTest {
+public class UserResourcesControllerTest extends IntegrationTestBase {
 
-    @LocalServerPort
-    private int port;
-
-    private Response response;
-
-    @Before
-    public void setupMockMvc() {
-        RestAssured.port = port;
-        RestAssured.baseURI = "http://localhost";
-
-    }
+//    @LocalServerPort
+//    private int port;
+//
+//    private Response response;
+//
+//    @Before
+//    public void setUo() {
+//        RestAssured.port = port;
+//        RestAssured.baseURI = "http://localhost";
+//
+//    }
 
     @Test
     public void shouldRetrieveAllUsers() {
@@ -86,10 +77,11 @@ public class UserResourcesControllerTest {
     public void shouldCreateNewPostForTheUser() {
         response = given().body("{\"description\":\"this is a test\"}")
                 .contentType("application/json")
-                .log().all()
-                .when().get("/users/10000/posts/").thenReturn();
-        response.then().log().all();
+                .log().all().post("/users/10000/posts/");
+        Response result = given().when().get("/users/10000/posts/").thenReturn();
+        result.then().log().all();
 
         assertThat(response.statusCode(), is(SC_CREATED));
+        assertThat(result.getBody().asString().contains("this is a test"), is(true));
     }
 }

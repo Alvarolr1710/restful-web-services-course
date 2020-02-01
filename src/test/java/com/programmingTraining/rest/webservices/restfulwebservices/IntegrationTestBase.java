@@ -18,10 +18,9 @@ public class IntegrationTestBase {
     protected Response response;
 
     @Before
-    public void setupMockMvc() {
+    public void setUp() {
         RestAssured.port = randomPort;
         RestAssured.baseURI = "http://localhost";
     }
-
 
 }
